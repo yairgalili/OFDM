@@ -19,7 +19,7 @@ def qpsk_mod(bits):
     # Normalize to unit power
     return symbols / np.sqrt(2)
 
-def simulate_eigen_bf_qpsk(snr_db_values, Nrx, Ntx, num_symbols=200000):
+def simulate_eigen_bf_qpsk(snr_db_values, Nrx, Ntx, num_symbols=1000000):
     ser = []
     
     # Generate random QPSK bits and symbols (matrix form)
@@ -38,7 +38,7 @@ def simulate_eigen_bf_qpsk(snr_db_values, Nrx, Ntx, num_symbols=200000):
         
         # Received signal
         _, _, w = np.linalg.svd(H, full_matrices=False)
-        h = np.squeeze(H@np.expand_dims(w[:, 1, :], axis=2))
+        h = np.squeeze(H@np.expand_dims(w[:, 0, :].conj(), axis=2))
         r = h*np.expand_dims(s, axis=1) + n
         
         r_comb = np.sum(np.conj(h) * r, axis=1)
@@ -53,7 +53,7 @@ def simulate_eigen_bf_qpsk(snr_db_values, Nrx, Ntx, num_symbols=200000):
         
     return ser
 
-def simulate_stc_qpsk(snr_db_values, Nrx, num_symbols=200000):
+def simulate_stc_qpsk(snr_db_values, Nrx, num_symbols=1000000):
     ser = []
     T = 2 # two time slots
     Ntx = T
