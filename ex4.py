@@ -35,7 +35,7 @@ def generate_all_qpsk_combinations(sequence_length):
     return np.array(all_combinations)
 
 
-def simulate_sm_qpsk(snr_db_values, Nrx, Ntx, num_symbols=10000):
+def simulate_sm_qpsk(snr_db_values, Nrx, Ntx, num_symbols=100000):
     ser = []
     # (dict_size=4^Ntx, Ntx) -> (1, Ntx, dict_size)
     dictionary = generate_all_qpsk_combinations(Ntx).T[np.newaxis, :, :]
@@ -55,14 +55,13 @@ def simulate_sm_qpsk(snr_db_values, Nrx, Ntx, num_symbols=10000):
         n = (np.random.randn(num_symbols, Nrx, 1) + 1j*np.random.randn(num_symbols, Nrx, 1)) * np.sqrt(noise_var)
         
         # (N, Nrx, 1)
-        # y = H@s + n
-        y = H@s
+        y = H@s + n
         
         # (N, Nrx, 1) - (N, Nrx, Ntx)@(N, Ntx, dict_size) = (N, Nrx, dict_size) -> (N, dict_size)
         r = np.linalg.norm(y - H@dictionary, axis=1)
         
         # QPSK detection (slicing real & imag signs)
-        idx = np.argmax(r, axis=1)
+        idx = np.argmin(r, axis=1)
         # (1, Ntx, N) -> (N, Ntx, 1)
         s_hat = np.permute_dims(dictionary[:, :, idx], axes=(2, 1, 0))
         
@@ -80,6 +79,9 @@ def simulate_sm_qpsk(snr_db_values, Nrx, Ntx, num_symbols=10000):
 SNR_dB = np.arange(0, 21, 2)
 
 results_sm = simulate_sm_qpsk(SNR_dB, 2, 2)
+results_sm_24 = simulate_sm_qpsk(SNR_dB, 2, 4)
+results_sm_42 = simulate_sm_qpsk(SNR_dB, 4, 2)
+results_sm_44 = simulate_sm_qpsk(SNR_dB, 4, 4)
 results_stc = simulate_stc_qpsk(SNR_dB, 1)
 
 # -------------------------------------------
@@ -87,6 +89,10 @@ results_stc = simulate_stc_qpsk(SNR_dB, 1)
 # -------------------------------------------
 plt.figure(figsize=(7,5))
 plt.semilogy(SNR_dB, results_sm, marker='o', label=f"SM 2×2")
+plt.semilogy(SNR_dB, results_sm_24, marker='o', label=f"SM 2×4")
+plt.semilogy(SNR_dB, results_sm_42, marker='o', label=f"SM 4×2")
+plt.semilogy(SNR_dB, results_sm_44, marker='o', label=f"SM 4×4")
+
 plt.semilogy(SNR_dB, results_stc, marker='o', label=f"STC 2×1")
 
 plt.grid(True, which="both", linestyle='--', alpha=0.7)
