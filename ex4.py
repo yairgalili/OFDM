@@ -67,36 +67,32 @@ def simulate_sm_qpsk(snr_db_values, Nrx, Ntx, num_symbols=100000):
         
         
         # Symbol errors
-        errors = np.sum(s_hat != s) / Ntx
-        ser.append(errors / num_symbols)
+        errors = np.sum(s_hat != s)
+        ser.append(errors / s.size)
         
     return ser
 
-
-# -------------------------------------------
-# Run Simulation
-# -------------------------------------------
-SNR_dB = np.arange(0, 21, 2)
-
-results_sm = simulate_sm_qpsk(SNR_dB, 2, 2)
-results_sm_24 = simulate_sm_qpsk(SNR_dB, 2, 4)
-results_sm_42 = simulate_sm_qpsk(SNR_dB, 4, 2)
-results_sm_44 = simulate_sm_qpsk(SNR_dB, 4, 4)
-results_stc = simulate_stc_qpsk(SNR_dB, 1)
-
-# -------------------------------------------
-# Plot
-# -------------------------------------------
-plt.figure(figsize=(7,5))
-plt.semilogy(SNR_dB, results_sm, marker='o', label=f"SM 2×2")
-plt.semilogy(SNR_dB, results_sm_24, marker='o', label=f"SM 2×4")
-plt.semilogy(SNR_dB, results_sm_42, marker='o', label=f"SM 4×2")
-plt.semilogy(SNR_dB, results_sm_44, marker='o', label=f"SM 4×4")
-
-plt.semilogy(SNR_dB, results_stc, marker='o', label=f"STC 2×1")
-
-plt.grid(True, which="both", linestyle='--', alpha=0.7)
-plt.xlabel("SNR[dB]")
-plt.ylabel("symbol error rate (SER)")
-plt.legend()
-plt.savefig("ex4.jpg")
+if __name__ == "__main__":
+	# -------------------------------------------
+	# Run Simulation
+	# -------------------------------------------
+	SNR_dB = np.arange(0, 21, 2)
+	results_sm = simulate_sm_qpsk(SNR_dB, 2, 2)
+	results_sm_24 = simulate_sm_qpsk(SNR_dB, 2, 4)
+	results_sm_42 = simulate_sm_qpsk(SNR_dB, 4, 2)
+	results_sm_44 = simulate_sm_qpsk(SNR_dB, 4, 4)
+	results_stc = simulate_stc_qpsk(SNR_dB, 1)
+	# -------------------------------------------
+	# Plot
+	# -------------------------------------------
+	plt.figure(figsize=(7,5))
+	plt.semilogy(SNR_dB, results_sm, marker='o', label=f"SM 2×2")
+	plt.semilogy(SNR_dB, results_sm_24, marker='o', label=f"SM 2×4")
+	plt.semilogy(SNR_dB, results_sm_42, marker='o', label=f"SM 4×2")
+	plt.semilogy(SNR_dB, results_sm_44, marker='o', label=f"SM 4×4")
+	plt.semilogy(SNR_dB, results_stc, marker='o', label=f"STC 2×1")
+	plt.grid(True, which="both", linestyle='--', alpha=0.7)
+	plt.xlabel("SNR[dB]")
+	plt.ylabel("symbol error rate (SER)")
+	plt.legend()
+	plt.savefig("ex4.jpg")

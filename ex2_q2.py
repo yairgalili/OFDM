@@ -54,7 +54,7 @@ def simulate_stc_qpsk(snr_db_values, num_symbols=200000):
         
         # Symbol errors
         errors = np.sum(s_hat != s)
-        ser.append(errors / num_symbols)
+        ser.append(errors / s.size)
         
     return ser
 
