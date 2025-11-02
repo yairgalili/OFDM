@@ -94,26 +94,25 @@ def simulate_stc_qpsk(snr_db_values, Nrx, num_symbols=1000000):
         
     return ser
 
-# -------------------------------------------
-# Run Simulation
-# -------------------------------------------
-SNR_dB = np.arange(0, 21, 2)
-
-results_bf_22 = simulate_eigen_bf_qpsk(SNR_dB, 2, 2)
-results_bf_24 = simulate_eigen_bf_qpsk(SNR_dB, 2, 4)
-results_stc = simulate_stc_qpsk(SNR_dB, 2)
-results_stc_4 = simulate_stc_qpsk(SNR_dB, 4)
-# -------------------------------------------
-# Plot
-# -------------------------------------------
-plt.figure(figsize=(7,5))
-plt.semilogy(SNR_dB, results_bf_22, marker='o', label=f"BF 2×2")
-plt.semilogy(SNR_dB, results_bf_24, marker='o', label=f"BF 2×4")
-plt.semilogy(SNR_dB, results_stc, marker='o', label=f"STC 2×2")
-plt.semilogy(SNR_dB, results_stc_4, marker='o', label=f"STC 2×4")
-
-plt.grid(True, which="both", linestyle='--', alpha=0.7)
-plt.xlabel("SNR[dB]")
-plt.ylabel("symbol error rate (SER)")
-plt.legend()
-plt.savefig("ex3.jpg")
+if __name__ == "__main__":
+	# -------------------------------------------
+	# Run Simulation
+	# -------------------------------------------
+	SNR_dB = np.arange(0, 21, 2)
+	results_bf_22 = simulate_eigen_bf_qpsk(SNR_dB, 2, 2)
+	results_bf_24 = simulate_eigen_bf_qpsk(SNR_dB, 2, 4)
+	results_stc = simulate_stc_qpsk(SNR_dB, 2)
+	results_stc_4 = simulate_stc_qpsk(SNR_dB, 4)
+	# -------------------------------------------
+	# Plot
+	# -------------------------------------------
+	plt.figure(figsize=(7,5))
+	plt.semilogy(SNR_dB, results_bf_22, marker='o', label=f"BF 2×2")
+	plt.semilogy(SNR_dB, results_bf_24, marker='o', label=f"BF 2×4")
+	plt.semilogy(SNR_dB, results_stc, marker='o', label=f"STC 2×2")
+	plt.semilogy(SNR_dB, results_stc_4, marker='o', label=f"STC 2×4")
+	plt.grid(True, which="both", linestyle='--', alpha=0.7)
+	plt.xlabel("SNR[dB]")
+	plt.ylabel("symbol error rate (SER)")
+	plt.legend()
+	plt.savefig("ex3.jpg")
